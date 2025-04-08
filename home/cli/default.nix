@@ -11,7 +11,7 @@
     # Terminal Tools:
     zsh
     nano
-    neovim
+    #neovim: added and managed below
     wget
     htop
     btop
@@ -22,7 +22,21 @@
   ];
 
   # Configure Tools: (no .config files etc..)
-  # TODO configure neovim here
+  
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
+    viAlias = true;
+    vimAlias = true;
+    vimdiffAlias = true;
+    plugins = with pkgs.vimPlugins; [
+      # TODO ??
+    ];
+    extraConfig = ''
+      luafile ${./nvim/init.lua}
+    '';
+  };
+
   programs.zsh = {
     enable = true;
     history.size = 10000000;
