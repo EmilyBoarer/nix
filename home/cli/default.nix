@@ -39,9 +39,4 @@
     };
   };
 
-  programs.git = {
-    enable = true;
-    # TODO config
-  };
-
 }
