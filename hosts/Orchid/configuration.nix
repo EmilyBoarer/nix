@@ -6,6 +6,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ../nixos # Include general NixOS config
     ];
 
   # This needs to be enabled here (despite it being enabled by home-manager) since it should be system-wide. we just use home-manager to customise our user's zsh

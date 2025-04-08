@@ -12,15 +12,14 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { nixpkgs, minegrub-world-sel-theme, home-manager, ... }:
+  outputs = { nixpkgs, home-manager, minegrub-world-sel-theme, ... }:
     let
       defineNixosSystem = hostname: nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
-          ./configuration.nix
-          minegrub-world-sel-theme.nixosModules.default
 	  ./locale.nix
-	  ./hosts/nixos
+	  ./hosts/${hostname}/configuration.nix
+	  minegrub-world-sel-theme.nixosModules.default # TODO haven't been able to get this to work from Orchid/configuration.nix yet - give it another go!
 	  ({ config, pkgs, lib, ... }: {
    	    networking.hostName = lib.mkDefault hostname;
 	    networking.networkmanager.enable = true;
@@ -44,7 +43,7 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.emily = ./home;
+            home-manager.users.emily = ./home/emily;
 	    home-manager.backupFileExtension = "backup";
           }
         ];
