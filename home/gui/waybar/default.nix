@@ -23,6 +23,7 @@
         "hyprland/window"
       ];
       modules-right = [
+	"pulseaudio"
         "tray"
 	"bluetooth"
         "network"
@@ -45,6 +46,15 @@
       bluetooth = {
         on-click = "~/.config/waybar/scripts/rofi-bluetooth &"; # TODO populate with an actual script!
         format = " {status}";
+      };
+      pulseaudio = {
+        #"scroll-step": 5,
+        #"max-volume": 150,
+        format = "vol {volume}%";
+        #"format-bluetooth": "vol {volume}%",
+        #"nospacing": 1,
+        on-click = "pavucontrol";
+        tooltip = false;
       };
     }];
   };

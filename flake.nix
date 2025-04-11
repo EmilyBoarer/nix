@@ -28,7 +28,7 @@
 	      # Set password with `passwd`
 	      isNormalUser = true;
 	      description = "Emily";
-	      extraGroups = [ "networkmanager" "wheel" ];
+	      extraGroups = [ "networkmanager" "wheel" "audio" ];
 	      shell = pkgs.zsh;
 	      packages = with pkgs; [
                 home-manager

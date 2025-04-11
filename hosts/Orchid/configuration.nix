@@ -78,6 +78,7 @@
     kitty
     swww # wallpapers
     rofi-wayland # TODO what is this one too?
+    pavucontrol
 
     steam
     nvtop
