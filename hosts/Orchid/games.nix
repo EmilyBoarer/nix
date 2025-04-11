@@ -20,7 +20,7 @@
     modesetting.enable = true;
     open = false;
     nvidiaSettings = true;
-    #forceFullCompositionPipeline = true; # Fixes tearing
+    forceFullCompositionPipeline = true; # Fixes tearing
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
   # Enable OpenGL
