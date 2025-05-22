@@ -48,7 +48,22 @@
           }
         ];
       };
+      defineHomeManagerOnlySystem = username: hostname: homedir: system: home-manager.lib.homeManagerConfiguration {
+        pkgs = import nixpkgs { inherit system; };
+
+        extraSpecialArgs = {
+          inherit username homedir;
+        };
+        
+        modules = [
+                ./home/${username}/hm-${hostname}.nix
+        ];
+	
+      };
     in {
-      nixosConfigurations.Orchid = defineNixosSystem "Orchid";
+      nixosConfigurations.Orchid   = defineNixosSystem "Orchid";
+      homeConfigurations.Firethorn = defineHomeManagerOnlySystem "emily" "Firethorn" "/home/emily" "x86_64-linux";
+      homeConfigurations.e134004   = defineHomeManagerOnlySystem "emiboa01" "e134004" "/home/emiboa01" "x86_64-linux";
+
   };
 }
