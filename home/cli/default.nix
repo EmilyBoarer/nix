@@ -37,6 +37,8 @@
     '';
   };
 
+  xdg.configFile."nvim/lua/core/mappings.lua".source = nvim/lua/core/mappings.lua;
+
   programs.zsh = {
     enable = true;
     history.size = 10000000;
