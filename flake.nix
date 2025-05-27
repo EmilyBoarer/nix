@@ -63,5 +63,6 @@
     in {
       nixosConfigurations.Orchid = defineNixosSystem "Orchid";
       homeConfigurations."emiboa01@e134004" = defineHomeManagerOnlySystem "emiboa01" "e134004" "/home/emiboa01" "x86_64-linux";
+      homeConfigurations."emiboa01@e132314" = defineHomeManagerOnlySystem "emiboa01" "e132314" "/home/emiboa01" "x86_64-linux";
   };
 }
