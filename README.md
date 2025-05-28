@@ -18,30 +18,51 @@ echo 'experimental-features = nix-command flakes' >> ~/.config/nix/nix.conf
 ```
 
 #### 2. Initialise Flake
-One-off: run the flake with a selected configuration.
-Running the flake will cause it to take effect. This will install home-manager too, which is subsequently used to do everything.
+<!-- One-off: run the flake with a selected configuration.
+Running the flake will cause it to take effect. This will install home-manager too, which is subsequently used to do everything. -->
 
-List configurations available: (currently only lists nixos configs, so not super helpful)
+<!-- List configurations available: (currently only lists nixos configs, so not super helpful)
 ```nix --experimental-features 'nix-command flakes' flake show github:EmilyBoarer/nix```
 
 Run the desired flake:
 <!-- ```nix --experimental-features 'nix-command flakes' run github:EmilyBoarer/nix#configurationgoeshere``` -->
-```nix --experimental-features 'nix-command flakes' run --refresh github:EmilyBoarer/nix#homeConfigurations.configurationgoeshere.activationPackage```
+```nix --experimental-features 'nix-command flakes' run --refresh github:EmilyBoarer/nix#homeConfigurations.configurationgoeshere.activationPackage``` -->
 
-#### Alternatively,
 Git clone the source tree, and then replace `github:EmilyBoarer/nix` with `.` or other path to the directory of the flake.
+
+Create `~/.config/nix/nix.conf` with contents `experimental-features = nix-command flakes`
+
+`git clone git@github.com:EmilyBoarer/nix.git` into a temp folder
+__TODO: naming the repo `nix` was probably a bad idea - re-name to something better!__
+
+
+```zsh
+mkdir ~/.config/home-manager
+mv ~/temp_nix/nix/* ~/.config/home-manager
+mv ~/temp_nix/nix/.* ~/.config/home-manager
+```
+
+Run it manually once. This will install home-manager among other things!
+`nix run ~/.config/home-manager`
+(assuming that the username has a config defined for it to detect!)
+
+
+TODO: things are not being sourced correctly!?? why??
+
 
 #### 3. Ongoing updates:
 
-```home-manager switch --flake .#Firethorn``` ????
+Once a new source tree for the flake is created (either by git pull or editing):
+```home-manager switch```
+to cause the new flake to be run and take effect.
+
+To update the flake's versions of everything, run ```nix flake update``` to update `flake.lock` then ```home-manager switch``` to cause that change to take effect. Ideally then commit and push the new `flake.lock` file after doing this!
 
 
-
-The flake source code lives in TODO. Update this as a git repo and push/pull any changes ???
-
-then hopefully can just do a `home-manager switch` from now on!??? 
 
 ## Filestructure / Repo Overview
+
+The files are located in `~/.config/home-manager` (or symlinked to that location)
 
 #### `flake.nix`
 Toplevel config.
