@@ -1,12 +1,8 @@
-{ config, pkgs, username, homedir, ... }:{
+{ config, pkgs, ... }:{
   imports = [
     ../cli
     ./git.nix
   ];
-
-  # TODO relocate these up the call chain:
-  home.username = username;
-  home.homeDirectory = homedir;
 
 
 

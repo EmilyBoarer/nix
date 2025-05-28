@@ -2,7 +2,44 @@
 
 ## Installation
 
-TODO!
+### Home-manager on existing Ubuntu:
+#### 1. Install the Nix package manager:
+Following https://nixos.org/download/ for single-user installation of Nix:
+```sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --no-daemon```
+
+Follow the advice given by the output to activate the environment.
+
+NB: Using single-user installation to avoid creating other users. This may be necessary to comply with the existing system that is being home-manager-ified.
+
+To disable needing all the experimental features stuff: (untested)
+```
+mkdir -p ~/.config/nix
+echo 'experimental-features = nix-command flakes' >> ~/.config/nix/nix.conf
+```
+
+#### 2. Initialise Flake
+One-off: run the flake with a selected configuration.
+Running the flake will cause it to take effect. This will install home-manager too, which is subsequently used to do everything.
+
+List configurations available: (currently only lists nixos configs, so not super helpful)
+```nix --experimental-features 'nix-command flakes' flake show github:EmilyBoarer/nix```
+
+Run the desired flake:
+<!-- ```nix --experimental-features 'nix-command flakes' run github:EmilyBoarer/nix#configurationgoeshere``` -->
+```nix --experimental-features 'nix-command flakes' run --refresh github:EmilyBoarer/nix#homeConfigurations.configurationgoeshere.activationPackage```
+
+#### Alternatively,
+Git clone the source tree, and then replace `github:EmilyBoarer/nix` with `.` or other path to the directory of the flake.
+
+#### 3. Ongoing updates:
+
+```home-manager switch --flake .#Firethorn``` ????
+
+
+
+The flake source code lives in TODO. Update this as a git repo and push/pull any changes ???
+
+then hopefully can just do a `home-manager switch` from now on!??? 
 
 ## Filestructure / Repo Overview
 

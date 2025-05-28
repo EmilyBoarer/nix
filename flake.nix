@@ -10,6 +10,9 @@
     
     minegrub-world-sel-theme.inputs.nixpkgs.follows = "nixpkgs";  
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
+    nixvim.url = "github:nix-community/nixvim";
+    nixvim.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = { nixpkgs, home-manager, minegrub-world-sel-theme, ... }:
@@ -48,22 +51,24 @@
           }
         ];
       };
-      defineHomeManagerOnlySystem = username: hostname: homedir: system: home-manager.lib.homeManagerConfiguration {
+      defineHomeManagerOnlySystem = username: hostname: system: home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs { inherit system; };
-
-        extraSpecialArgs = {
-          inherit username homedir;
-        };
         
         modules = [
+            {
+              ## Assume home directory location
+              home.username = username;
+              home.homeDirectory = "/home/${username}";
+            }
+
                 ./home/${username}/hm-${hostname}.nix
+                # ./locale.nix # TODO create a home-locale.nix ??
         ];
 	
       };
     in {
       nixosConfigurations.Orchid   = defineNixosSystem "Orchid";
-      homeConfigurations.Firethorn = defineHomeManagerOnlySystem "emily" "Firethorn" "/home/emily" "x86_64-linux";
-      homeConfigurations.e134004   = defineHomeManagerOnlySystem "emiboa01" "e134004" "/home/emiboa01" "x86_64-linux";
-
+      homeConfigurations.Firethorn = defineHomeManagerOnlySystem "emily" "Firethorn" "x86_64-linux";
+      homeConfigurations.e134004   = defineHomeManagerOnlySystem "emiboa01" "e134004" "x86_64-linux";
   };
 }

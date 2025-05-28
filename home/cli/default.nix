@@ -22,19 +22,21 @@
   ];
 
   # Configure Tools: (no .config files etc..)
-  
+  # inputs.nixvim.homeModules.nixvim = TODO;
+  # programs.nixvim = {
   programs.neovim = {
     enable = true;
     defaultEditor = true;
     viAlias = true;
     vimAlias = true;
     vimdiffAlias = true;
-    plugins = with pkgs.vimPlugins; [
-      # TODO ??
-    ];
+    # extraPlugins = with pkgs.vimPlugins; [
+    #   # TODO ??
+    # ];
     extraConfig = ''
       luafile ${./nvim/init.lua}
     '';
+    # plugins.dashboard-nvim.enable = true;
   };
 
   xdg.configFile."nvim/lua/core/mappings.lua".source = nvim/lua/core/mappings.lua;
