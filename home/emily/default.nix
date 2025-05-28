@@ -1,4 +1,4 @@
-# Config for `emily` user, assuming GUI
+# Config for `emily` user, assuming NixOS system with home-manager
 
 { config, pkgs, ... }:{
   imports = [
