@@ -26,9 +26,9 @@ Running the flake will cause it to take effect. This will install home-manager t
 
 Run the desired flake:
 <!-- ```nix --experimental-features 'nix-command flakes' run github:EmilyBoarer/nix#configurationgoeshere``` -->
-```nix --experimental-features 'nix-command flakes' run --refresh github:EmilyBoarer/nix#homeConfigurations.configurationgoeshere.activationPackage``` -->
+<!-- ```nix --experimental-features 'nix-command flakes' run --refresh github:EmilyBoarer/nix#homeConfigurations.configurationgoeshere.activationPackage``` -->
 
-Git clone the source tree, and then replace `github:EmilyBoarer/nix` with `.` or other path to the directory of the flake.
+<!-- Git clone the source tree, and then replace `github:EmilyBoarer/nix` with `.` or other path to the directory of the flake. -->
 
 Create `~/.config/nix/nix.conf` with contents `experimental-features = nix-command flakes`
 
@@ -48,6 +48,8 @@ Run it manually once. This will install home-manager among other things!
 
 
 TODO: things are not being sourced correctly!?? why??
+manual sourcing: `source .nix-profile/etc/profile.d/nix.sh`
+How to make automatic?
 
 
 #### 3. Ongoing updates:

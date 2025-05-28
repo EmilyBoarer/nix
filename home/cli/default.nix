@@ -46,8 +46,10 @@
     history.size = 10000000;
     shellAliases = {
       amend = "git commit --amend";
+      lg = "git log --oneline -n 15";
       l = "ls -l";
       la = "ls -al";
+      al = "ls -al";
       grepr = "grep -r";
     };
     oh-my-zsh = {
