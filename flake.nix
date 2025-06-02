@@ -12,10 +12,11 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     nixvim.url = "github:nix-community/nixvim";
-    nixvim.inputs.nixpkgs.follows = "nixpkgs";
+    #Do not track nixpkgs for nixvim - as per nixvim FAQ
+    #nixvim.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { nixpkgs, home-manager, minegrub-world-sel-theme, ... }:
+  outputs = { nixpkgs, home-manager, minegrub-world-sel-theme, nixvim, ... }:
     let
       defineNixosSystem = hostname: nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -63,6 +64,7 @@
 
                 ./home/${username}/home.nix
                 # ./locale.nix # TODO create a home-locale.nix ??
+		nixvim.homeManagerModules.nixvim
         ];
 	
       };

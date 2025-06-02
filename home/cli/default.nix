@@ -2,16 +2,17 @@
 # Basically, all the terminal tools & their configs
 
 # home-manager CLI config:
-{ config, pkgs, ... }:{
+{ config, pkgs, lib, ... }:{
   home.stateVersion = "24.05";
   nixpkgs.config.allowUnfree = true;
   programs.home-manager.enable = true;
+  
+  programs.nixvim = import ./nixvim.nix { inherit pkgs lib; };
 
   home.packages = with pkgs; [
     # Terminal Tools:
     zsh
     nano
-    #neovim: added and managed below
     wget
     htop
     btop
@@ -19,38 +20,24 @@
     git
     tree
     mosh
+    tmux
+    bat
   ];
 
   # Configure Tools: (no .config files etc..)
-  # inputs.nixvim.homeModules.nixvim = TODO;
-  # programs.nixvim = {
-  programs.neovim = {
-    enable = true;
-    defaultEditor = true;
-    viAlias = true;
-    vimAlias = true;
-    vimdiffAlias = true;
-    # extraPlugins = with pkgs.vimPlugins; [
-    #   # TODO ??
-    # ];
-    extraConfig = ''
-      luafile ${./nvim/init.lua}
-    '';
-    # plugins.dashboard-nvim.enable = true;
-  };
-
-  xdg.configFile."nvim/lua/core/mappings.lua".source = nvim/lua/core/mappings.lua;
-
   programs.zsh = {
     enable = true;
     history.size = 10000000;
     shellAliases = {
       amend = "git commit --amend";
-      lg = "git log --oneline -n 15";
+      lg = "git log --oneline -n 15 | cat";
+      gl = "lg";
       l = "ls -l";
       la = "ls -al";
-      al = "ls -al";
+      al = "la";
       grepr = "grep -r";
+      gg = "git grep";
+      #cat = "bat";
     };
     oh-my-zsh = {
       enable = true;
