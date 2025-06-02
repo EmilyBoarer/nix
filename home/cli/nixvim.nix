@@ -1,7 +1,7 @@
 # NixVim docs:    https://nix-community.github.io/nixvim/
 # Neovim Options: https://nix-community.github.io/nixvim/NeovimOptions/index.html
 
-{ pkgs, lib }: {
+{ pkgs, ... }: {
   enable        = true;
   defaultEditor = true;
   vimAlias      = true;
@@ -10,22 +10,58 @@
   # TODO colorscheme & syntax highlighting
   colorschemes.gruvbox = {
     enable = true;
-#    flavor = "duskfox";
   };
 
   plugins = {
+    # List of Plugins Available: https://github.com/nix-community/nixvim/tree/main/plugins/by-name
+
+    # Language Server Protocol bits:
     lspkind.enable = true;
     lsp-format.enable = true;
     lsp-status.enable = true;
     lsp.enable = true;
 
+    # Prettify the status bar at the bottom:
     lualine.enable = true;
 
+    # Set background text etc..
+    dashboard = {
+      enable = true;
+      settings = {
+        config = {
+          header = [
+            " █████   █████ █████ ██████   ██████ █████ █████       █████ █████"
+            "░░███   ░░███ ░░███ ░░██████ ██████ ░░███ ░░███       ░░███ ░░███ "
+            " ░███    ░███  ░███  ░███░█████░███  ░███  ░███        ░░███ ███  "
+            " ░███    ░███  ░███  ░███░░███ ░███  ░███  ░███         ░░█████   "
+            " ░░███   ███   ░███  ░███ ░░░  ░███  ░███  ░███          ░░███    "
+            "  ░░░█████░    ░███  ░███      ░███  ░███  ░███      █    ░███    "
+            "    ░░███      █████ █████     █████ █████ ███████████    █████   "
+            "     ░░░      ░░░░░ ░░░░░     ░░░░░ ░░░░░ ░░░░░░░░░░░    ░░░░░    "
+            ""
+          ];
+          shortcut = [{ desc = "leader = <space>"; }];
+          disable_move = true;
+          packages.enable = false;
+          project.limit = 5;
+          mru.limit = 15;
+          footer = [ "" "nixvim (neovim) - Configured with ❤️ in Cambridge, UK" ];
+        };
+      };
+    };
+
+    # TODO investigate `diffview` https://github.com/nix-community/nixvim/blob/main/plugins/by-name/diffview/default.nix
+    # TODO look into git-worktree and other git related plugins
+
+    # TODO: treesitter - duplicate of LSP or a good addition?
+
+    # TODO try this out:
     markdown-preview = {
       enable = true;
       #settings.auto_close = 0;
     };
 
+    # TODO what do these do:
     nvim-autopairs.enable = true;
     nvim-surround.enable = true;
   };
@@ -64,22 +100,28 @@
   # extraPlugings = TODO if necessary
 
   opts = {
+    # https://neovim.io/doc/user/options.html
     # TODO look through the docs and comment about what each one of these does!
     termguicolors = true;
 
     encoding = "utf-8";
     cursorline = true;
 
-    wrap = false;
+    wrap = true;
     sidescroll = 8;
-    showbreak = "↪";
+    showbreak = "↳"; ## TODO future special characters, noted here for later: ↯ ❰❱❲❳⦃⦄⟬⟭〈〉⦗⦘⸨⸩⸙〘〙〈〉《》𑗋
 
     viewoptions = [ "folds" "cursor" ];
 
-    tabstop = 4;
-    shiftwidth = 4;
+    # Defines the column multiple used to display the Horizontal Tab character
+    tabstop = 8; # TODO only want 2 for nix files, want 8 for most OSS applications!
+    # Number of columns that make up one level of (auto)indentation
+    shiftwidth = 2;
+    # In Insert mode: Use the appropriate number of spaces to insert a <Tab>
     expandtab = true;
+    # Do smart autoindenting when starting a new line
     smartindent = true;
+    # TODO stop comments from losing their smart-indent!
 
     foldmethod = "syntax";
     foldcolumn = "1";
@@ -95,15 +137,16 @@
     mouse = "a";
 
     list = true;
-    listchars = "tab:»\\ ,trail:\\u2217,nbsp:⎵,precedes:<,extends:>"; #   TODO experiment around with this one, and see what works and what doesn't
+    listchars = "tab:⇆ ,trail:؟,nbsp:⎵,precedes:<,extends:>";
   };
 
-  #globals.mapleader = " ";
-  #keymaps = [
-    # TODO!
+  globals.mapleader = " ";
+  keymaps = [
+    { key = "<leader>t"; options.desc = "test action to do something"; action = ":echo \"Hello, World!\""; }
+    #{ key = "<leader>g"; options.desc = "`grep -r` in directory"; action = "" }
     # idea: g -> grep -r in directory
     # idea: fuzzy finder or similarly search for similar looking things (not a regex etc..)
     # idea: make current file executable, or just chmod current file and specify +x or -r etc.. with examples given.
     # idea: home-manager switch command without having to leave nvim
-  #];
+  ];
 }
