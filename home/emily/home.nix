@@ -6,4 +6,7 @@
     ./git.nix
   ];
 
+  # Install Kitty terminal emulator
+  programs.kitty.enable = true;  
+
 }

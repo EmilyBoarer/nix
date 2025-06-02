@@ -6,7 +6,7 @@
   home.stateVersion = "24.05";
   nixpkgs.config.allowUnfree = true;
   programs.home-manager.enable = true;
-  
+
   programs.nixvim = import ./nixvim.nix { inherit pkgs lib; };
 
   home.packages = with pkgs; [
@@ -24,13 +24,13 @@
     bat
   ];
 
-  # Configure Tools: (no .config files etc..)
+  # Configure Tools:
   programs.zsh = {
     enable = true;
     history.size = 10000000;
     shellAliases = {
       amend = "git commit --amend";
-      lg = "git log --oneline -n 15 | cat";
+      lg = "git log --oneline -n 15 --color=always | cat";
       gl = "lg";
       l = "ls -l";
       la = "ls -al";
@@ -44,6 +44,12 @@
       theme = "agnoster";
       plugins = [ "git" ];
     };
+  };
+
+  # Set Locale: TODO this still needs to be set manually - why?
+  home.sessionVariables = {
+      LANG           = "en_GB.UTF-8";
+      LOCALE_ARHCIVE = "/usr/lib/locale/locale-archive";
   };
 
 }
