@@ -9,7 +9,7 @@
   programs.kitty = {
     enable = true;
     font = {
-      name = "JetBrainsMono Nerd Font";
+      name = "0xProto Nerd Font Propo";
       size = 16;
     };
   };

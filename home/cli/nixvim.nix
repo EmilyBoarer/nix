@@ -30,14 +30,14 @@
       settings = {
         config = {
           header = [
-            " █████   █████ █████ ██████   ██████ █████ █████       █████ █████"
-            "░░███   ░░███ ░░███ ░░██████ ██████ ░░███ ░░███       ░░███ ░░███ "
-            " ░███    ░███  ░███  ░███░█████░███  ░███  ░███        ░░███ ███  "
-            " ░███    ░███  ░███  ░███░░███ ░███  ░███  ░███         ░░█████   "
-            " ░░███   ███   ░███  ░███ ░░░  ░███  ░███  ░███          ░░███    "
-            "  ░░░█████░    ░███  ░███      ░███  ░███  ░███      █    ░███    "
-            "    ░░███      █████ █████     █████ █████ ███████████    █████   "
-            "     ░░░      ░░░░░ ░░░░░     ░░░░░ ░░░░░ ░░░░░░░░░░░    ░░░░░    "
+            " █████   █████ █████ ██████   ██████ █████ █████    █████ █████"
+            "░░███   ░░███ ░░███ ░░██████ ██████ ░░███ ░░███    ░░███ ░░███ "
+            " ░███    ░███  ░███  ░███░█████░███  ░███  ░███     ░░███ ███  "
+            " ░███    ░███  ░███  ░███░░███ ░███  ░███  ░███      ░░█████   "
+            " ░░███   ███   ░███  ░███ ░░░  ░███  ░███  ░███       ░░███    "
+            "  ░░░█████░    ░███  ░███      ░███  ░███  ░███      █ ░███    "
+            "    ░░███      █████ █████     █████ █████ ███████████ █████   "
+            "     ░░░      ░░░░░ ░░░░░     ░░░░░ ░░░░░ ░░░░░░░░░░░ ░░░░░    "
             ""
           ];
           shortcut = [{ desc = "leader = <space>"; }];
@@ -48,22 +48,58 @@
           footer = [ "" "nixvim (neovim) - Configured with ❤️ in Cambridge, UK" ];
         };
       };
+      # TODO: configure the default shortcuts to not use Telescope (not using, so breaks!)
     };
 
-    # TODO investigate `diffview` https://github.com/nix-community/nixvim/blob/main/plugins/by-name/diffview/default.nix
-    # TODO look into git-worktree and other git related plugins
+    # Show prompt when pressing the <leader> key, to help remind what shortcuts are available and what they do
+    which-key.enable = true;
+    # NB: menu layout configured below with the keymaps
+
+    # Git Plugins:
+    gitblame = {
+      enable = true;
+      # TODO: disable by default
+      settings = {
+        message_template = " <author>, <date>";
+        date_format = "%a %d %b %Y";
+      };
+    };
+    lazygit.enable = true; # TODO how to use?
+
+    # Show tabs for different open buffers
+    barbar = {
+      enable = true;
+    };
+
+    # File Explorere sidebar
+    web-devicons.enable = true;
+    nvim-tree = {
+      enable = true;
+      modified.enable = true;
+      # show all dotfiles and dotdirs, but hide .git dir:
+      filters.custom = [
+        ".git"
+      ];
+    };
+
+    ## TODO: fzf - fuzzy finder and grep things? 'telescope' is also an alternative worth trying out
+    ## TODO: fterm - floating terminal?
 
     # TODO: treesitter - duplicate of LSP or a good addition?
+    # TODO: auto completion? get it to look up in the open source sourcecode, so no need to have all the web browsers open all the time for the repos.
 
-    # TODO try this out:
-    markdown-preview = {
+    # TODO: don't allow file write if code will error? (temporarily good, only if can get large codebases to stop giving false-positives for errors)
+
+    # Automatically pair brackets:
+    nvim-autopairs.enable = true; # TODO also autocomplete semicolons after `{}` in nix files? how? LSP do a better job at this sort of thing?
+
+    # Colour hexcodes etc.. inline:
+    colorizer = {
       enable = true;
-      #settings.auto_close = 0;
+      settings.names = false;
     };
 
-    # TODO what do these do:
-    nvim-autopairs.enable = true;
-    nvim-surround.enable = true;
+    ## TODO explore nvim-surround.enable = true;
   };
 
   lsp = {
@@ -96,8 +132,6 @@
       };
     };
   };
-
-  # extraPlugings = TODO if necessary
 
   opts = {
     # https://neovim.io/doc/user/options.html
@@ -142,11 +176,51 @@
 
   globals.mapleader = " ";
   keymaps = [
-    { key = "<leader>t"; options.desc = "test action to do something"; action = ":echo \"Hello, World!\""; }
-    #{ key = "<leader>g"; options.desc = "`grep -r` in directory"; action = "" }
+    # TODO idea: toggle relative line numbers for `d` and `y` then back to regular numbers afterwards
+    #{ key = "<leader>g"; options.desc = "`grep -r` in directory"; action = ""; }
     # idea: g -> grep -r in directory
     # idea: fuzzy finder or similarly search for similar looking things (not a regex etc..)
     # idea: make current file executable, or just chmod current file and specify +x or -r etc.. with examples given.
     # idea: home-manager switch command without having to leave nvim
+    # Nix shortcuts:
+    { key = "<leader>r"; options.desc = "Reload: Test out new config"; action = ":source $MYVIMRC<CR>"; }
+    { key = "<leader>nhs"; options.desc = "Home-manager switch"; action = ":terminal home-manager switch<CR>"; } # TODO launch the terminal in a better way!
+    # Git shortcuts:
+    { key = "<leader>gb"; options.desc = "Git: Toggle Inline Blame"; action = ":GitBlameToggle<CR>"; }
+    # File manager:
+    { key = "<leader>f"; options.desc = "Toggle File Tree Visibility"; action = ":NvimTreeToggle<CR>"; }
+  ];
+  # Specify Groups of keymaps for which-key
+  plugins.which-key.settings.spec = [
+    { # Git
+      __unkeyed = "<leader>g";
+      group = "Git";
+      icon = "";
+    }
+    { # Nix
+      __unkeyed = "<leader>n";
+      group = "Nix etc..";
+      icon = "󱄅";
+    }
+    { # Nix: Home-Manager
+      __unkeyed = "<leader>nh";
+      group = "Home-Manager";
+      icon = "🏠";
+    }
+    { # Nix: NixOS
+      __unkeyed = "<leader>no";
+      group = "NixOS";
+      icon = "";
+    }
+    { # Debugging: TODO add commands for this category
+      __unkeyed = "<leader>d";
+      group = "Debugging";
+      icon = "";
+    }
+    { # Grep, Goto definition, etc..
+      __unkeyed = "<leader>h"; # optimise for home-row!
+      group = "Navigate Codebase";
+      icon = "󰥩";
+    }
   ];
 }
