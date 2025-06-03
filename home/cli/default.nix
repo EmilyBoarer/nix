@@ -19,9 +19,22 @@
     neofetch
     git
     tree
-    mosh
-    tmux
     bat
+    #mosh # >=1.4 required for truecolor
+    # TODO fix SSH!!! etc.. overlay nixpkgs
+    (mosh.overrideAttrs(old: {
+      nativeBuildInputs = (old.nativeBuildInputs or []) ++ [ makeWrapper ];
+      # Work around "No user exists for uid <numbers>" by prepending sssd to
+      # LD_LIBRARY_PATH This is a hack because it hijacks the
+      # "postFixup", that incidentally is not set for mosh, but it could be in the future
+      postPatch = ''
+        substituteInPlace scripts/mosh.pl \
+          --subst-var-by ssh "/usr/bin/ssh" \
+          --subst-var-by mosh-client "$out/bin/mosh-client"
+      '';
+#        wrapProgram $out/bin/mosh --prefix LD_LIBRARY_PATH : "${sssd}/lib"
+    }))
+    tmux
   ];
 
   # Configure Tools:
@@ -44,12 +57,7 @@
       theme = "agnoster";
       plugins = [ "git" ];
     };
+    # TODO standardise this, guard this? and otherwise sort out this problem!
+    envExtra = ". /home/emiboa01/.nix-profile/etc/profile.d/nix.sh; export LANG=\"en_GB.UTF-8\"; ";
   };
-
-  # Set Locale: TODO this still needs to be set manually - why?
-  home.sessionVariables = {
-      LANG           = "en_GB.UTF-8";
-      LOCALE_ARHCIVE = "/usr/lib/locale/locale-archive";
-  };
-
 }
