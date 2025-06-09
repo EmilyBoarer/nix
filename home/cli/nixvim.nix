@@ -15,14 +15,11 @@
   plugins = {
     # List of Plugins Available: https://github.com/nix-community/nixvim/tree/main/plugins/by-name
 
-    # Language Server Protocol bits:
-    lspkind.enable = true;
-    lsp-format.enable = true;
-    lsp-status.enable = true;
-    lsp.enable = true;
-
-    # Prettify the status bar at the bottom:
-    lualine.enable = true;
+    # Language Server Protocol bits: // TODO disable auto-'correction' of c source files whitespace formatting etc..
+    #lspkind.enable = true;
+    #lsp-format.enable = true;
+    #lsp-status.enable = true;
+    #lsp.enable = true;
 
     # Set background text etc..
     dashboard = {
@@ -71,6 +68,9 @@
       enable = true;
     };
 
+    # Prettify the status bar at the bottom:
+    lualine.enable = true;
+
     # File Explorere sidebar
     web-devicons.enable = true;
     nvim-tree = {
@@ -82,10 +82,31 @@
       ];
     };
 
-    ## TODO: fzf - fuzzy finder and grep things? 'telescope' is also an alternative worth trying out
-    ## TODO: fterm - floating terminal?
+    # Floating terminal 'window':
+    floaterm = {
+      enable = true;
+      settings = {
+        width = 0.8;
+        height = 0.6;
+        autoclose = 1; # Close window only if the job exits normally
+        keymap_new    = "<leader>t";
+        keymap_prev   = "<leader>ap";
+        keymap_next   = "<leader>an";
+        keymap_toggle = "<leader>at";
+        keymap_kill   = "<leader>ak";
+      };
+    };
 
-    # TODO: treesitter - duplicate of LSP or a good addition?
+    # Telescope: Fuzzy finder / grep functionality
+    telescope = {
+      enable = true;
+      settings.defaults.layout_strategy = "vertical";
+    };
+
+    # Tree-sitter (Syntax Highlighting, indentation, folding etc..)
+    treesitter.enable = true;
+    # LSP (Code completion, Diagnostics, Formatting, etc..) TODO implement
+
     # TODO: auto completion? get it to look up in the open source sourcecode, so no need to have all the web browsers open all the time for the repos.
 
     # TODO: don't allow file write if code will error? (temporarily good, only if can get large codebases to stop giving false-positives for errors)
@@ -102,36 +123,36 @@
     ## TODO explore nvim-surround.enable = true;
   };
 
-  lsp = {
-    # TODO customise what LSPs are installed .. just default from ithinuel currently
-    inlayHints.enable = true;
-    servers = {
-      asm_lsp.enable = true;
-      bashls.enable = true;
-      bitbake_language_server.enable = pkgs.stdenv.isLinux;
-      clangd.enable = true;
-      cmake.enable = true;
-      dockerls.enable = true;
-      #gitlab_ci_ls.enable = true; # TODO: Enable when available
-      jsonls.enable = true;
-      just.enable = true;
-      lua_ls.enable = true;
-      pyright.enable = true;
-      ruff.enable = true;
-      # TODO: the default config doesn’t work great quite yet
-      # see https://github.com/nix-community/nixvim/issues/3296
-      #statix.enable = true;
-      yamlls.enable = true;
+  #lsp = {
+  #  # TODO customise what LSPs are installed .. just default from ithinuel currently
+  #  inlayHints.enable = true;
+  #  servers = {
+  #    asm_lsp.enable = true;
+  #    bashls.enable = true;
+  #    bitbake_language_server.enable = pkgs.stdenv.isLinux;
+  #    clangd.enable = true;
+  #    cmake.enable = true;
+  #    dockerls.enable = true;
+  #    #gitlab_ci_ls.enable = true; # TODO: Enable when available
+  #    jsonls.enable = true;
+  #    just.enable = true;
+  #    lua_ls.enable = true;
+  #    pyright.enable = true;
+  #    ruff.enable = true;
+  #    # TODO: the default config doesn’t work great quite yet
+  #    # see https://github.com/nix-community/nixvim/issues/3296
+  #    #statix.enable = true;
+  #    yamlls.enable = true;
 
-      rust_analyzer = {
-        enable = true;
-      };
-      nixd = {
-        enable = true;
-        settings.formatting.command = [ "nixpkgs-fmt" ];
-      };
-    };
-  };
+  #    rust_analyzer = {
+  #      enable = true;
+  #    };
+  #    nixd = {
+  #      enable = true;
+  #      settings.formatting.command = [ "nixpkgs-fmt" ];
+  #    };
+  #  };
+  #};
 
   opts = {
     # https://neovim.io/doc/user/options.html
@@ -177,18 +198,21 @@
   globals.mapleader = " ";
   keymaps = [
     # TODO idea: toggle relative line numbers for `d` and `y` then back to regular numbers afterwards
-    #{ key = "<leader>g"; options.desc = "`grep -r` in directory"; action = ""; }
-    # idea: g -> grep -r in directory
-    # idea: fuzzy finder or similarly search for similar looking things (not a regex etc..)
     # idea: make current file executable, or just chmod current file and specify +x or -r etc.. with examples given.
     # idea: home-manager switch command without having to leave nvim
     # Nix shortcuts:
     { key = "<leader>r"; options.desc = "Reload: Test out new config"; action = ":source $MYVIMRC<CR>"; }
-    { key = "<leader>nhs"; options.desc = "Home-manager switch"; action = ":terminal home-manager switch<CR>"; } # TODO launch the terminal in a better way!
+    { key = "<leader>nhs"; options.desc = "Home-manager switch"; action = ":FloatermNew home-manager switch<CR>"; }
     # Git shortcuts:
     { key = "<leader>gb"; options.desc = "Git: Toggle Inline Blame"; action = ":GitBlameToggle<CR>"; }
     # File manager:
-    { key = "<leader>f"; options.desc = "Toggle File Tree Visibility"; action = ":NvimTreeToggle<CR>"; }
+    { key = "<leader>h"; options.desc = "Toggle File Tree Visibility"; action = ":NvimTreeToggle<CR>"; }
+    # Telescope: TODO try out different options and shortcut the ones which end up being useful. TODO hook into LSP to search files?
+    # https://github.com/nvim-telescope/telescope.nvim
+    { key = "<leader>ff"; options.desc = "Telescope find files"; action = ":Telescope find_files<CR>"; }
+    { key = "<leader>fg"; options.desc = "Telescope live grep"; action = ":Telescope live_grep<CR>"; }
+    { key = "<leader>fb"; options.desc = "Telescope buffers"; action = ":Telescope buffers<CR>"; }
+    { key = "<leader>fh"; options.desc = "Telescope help_tags"; action = ":Telescope help_tags<CR>"; }
   ];
   # Specify Groups of keymaps for which-key
   plugins.which-key.settings.spec = [
@@ -217,10 +241,15 @@
       group = "Debugging";
       icon = "";
     }
-    { # Grep, Goto definition, etc..
-      __unkeyed = "<leader>h"; # optimise for home-row!
+    { # Telescope, TODO: Goto definition, etc..
+      __unkeyed = "<leader>f";
       group = "Navigate Codebase";
       icon = "󰥩";
+    }
+    { # Floaterm - floating terminal
+      __unkeyed = "<leader>a"; # optimise for home-row!
+      group = "Floaterm";
+      icon = "";
     }
   ];
 }

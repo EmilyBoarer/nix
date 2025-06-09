@@ -22,6 +22,7 @@
     mosh
     tmux
     bat
+    ripgrep
   ];
 
   # Configure Tools:
