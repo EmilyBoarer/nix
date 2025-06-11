@@ -40,12 +40,12 @@
           shortcut = [{ desc = "leader = <space>"; }];
           disable_move = true;
           packages.enable = false;
-          project.limit = 5;
+          #project.limit = 5;
+          project.enable = false;
           mru.limit = 15;
           footer = [ "" "nixvim (neovim) - Configured with ❤️ in Cambridge, UK" ];
         };
       };
-      # TODO: configure the default shortcuts to not use Telescope (not using, so breaks!)
     };
 
     # Show prompt when pressing the <leader> key, to help remind what shortcuts are available and what they do
@@ -61,7 +61,23 @@
         date_format = "%a %d %b %Y";
       };
     };
-    lazygit.enable = true; # TODO how to use?
+    lazygit.enable = true;
+    gitsigns = { # Annotate git status line-by-line in the lefthand column
+      enable = true;
+      settings = {
+        signs = {
+          add.text = "+";
+          change.text = "±";
+          delete.text = "_";
+          topdelete.text = "‾";
+          changedelete.text = "~";
+          untracked.text = "┆";
+        };
+        signcolumn=true;
+        watch_gitdir.follow_files = true;
+        current_line_blame = false;
+      };
+    };
 
     # Show tabs for different open buffers
     barbar = {
@@ -117,8 +133,34 @@
     # Colour hexcodes etc.. inline:
     colorizer = {
       enable = true;
-      settings.names = false;
+      settings.names = false; ## TODO: this setting doesn't appear to be working!
     };
+
+
+    # Make it easier to comment and uncomment code
+    #comment = {
+    #  enable = true;
+    #  settings = {
+    #    # Set new custom ones TODO why are these keybinds not working??, set them below instead?
+    #    toggler = {
+    #      line = "mhh";
+    #      block = "mbb";
+    #    };
+    #    opleader = {
+    #      line = "mh";
+    #      block = "mh";
+    #    };
+    #    extra = {
+    #      above = "mk";
+    #      below = "mj";
+    #      eol = "ml";
+    #    };
+    #  };
+    #};
+
+    # TODO symbols-outline - list all the symbols in a file
+    # https://github.com/simrat39/symbols-outline.nvim?tab=readme-ov-file
+
 
     ## TODO explore nvim-surround.enable = true;
   };
@@ -156,7 +198,6 @@
 
   opts = {
     # https://neovim.io/doc/user/options.html
-    # TODO look through the docs and comment about what each one of these does!
     termguicolors = true;
 
     encoding = "utf-8";
@@ -205,9 +246,12 @@
     { key = "<leader>nhs"; options.desc = "Home-manager switch"; action = ":FloatermNew home-manager switch<CR>"; }
     # Git shortcuts:
     { key = "<leader>gb"; options.desc = "Git: Toggle Inline Blame"; action = ":GitBlameToggle<CR>"; }
+    { key = "<leader>gg"; options.desc = "Open LazyGit"; action = ":LazyGit<CR>"; }
+
     # File manager:
     { key = "<leader>h"; options.desc = "Toggle File Tree Visibility"; action = ":NvimTreeToggle<CR>"; }
-    # Telescope: TODO try out different options and shortcut the ones which end up being useful. TODO hook into LSP to search files?
+
+# Telescope: TODO try out different options and shortcut the ones which end up being useful. TODO hook into LSP to search files?
     # https://github.com/nvim-telescope/telescope.nvim
     { key = "<leader>ff"; options.desc = "Telescope find files"; action = ":Telescope find_files<CR>"; }
     { key = "<leader>fg"; options.desc = "Telescope live grep"; action = ":Telescope live_grep<CR>"; }
